@@ -13,11 +13,11 @@ import classes.Customer;
  */
 public interface DAO {
     
-    public void crearClient( Customer c);
-    public String consuClient( );
-    public void consuCuent( );
+    public void crearCliente(Customer c);
+    public Customer consuCliente( );
+    public void consuCuenta( );
     public void crearCuenta( );
-    public void addClient( );
+    public void addCliente( );
     public void consuDatoC( );
     public void movimi();
     public void consuMovimi();

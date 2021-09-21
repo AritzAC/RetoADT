@@ -6,6 +6,7 @@
 package classes;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import static java.util.Collections.enumeration;
 
@@ -20,10 +21,15 @@ public class Account implements Serializable{
     private float balance;
     private float creditLine;
     private float beginBalance;
-    private LocalDate beginBalanceTimestmp;
+    private Timestamp beginBalanceTimestamp;
+    private int accountType ;
 
-    private enum accountType {
-        Standard, Credit;
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
+    }
+
+    public int getAccountType() {
+        return accountType;
     }
 
     /**
@@ -99,15 +105,14 @@ public class Account implements Serializable{
     /**
      * @return the beginBalanceTimestmp
      */
-    public LocalDate getBeginBalanceTimestmp() {
-        return beginBalanceTimestmp;
+   
+
+    public void setBeginBalanceTimestmp(Timestamp beginBalanceTimestamp) {
+        this.beginBalanceTimestamp = beginBalanceTimestamp;
     }
 
-    /**
-     * @param beginBalanceTimestmp the beginBalanceTimestmp to set
-     */
-    public void setBeginBalanceTimestmp(LocalDate beginBalanceTimestmp) {
-        this.beginBalanceTimestmp = beginBalanceTimestmp;
+    public Timestamp getBeginBalanceTimestamp() {
+        return beginBalanceTimestamp;
     }
 
     public Account() {
