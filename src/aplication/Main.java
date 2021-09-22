@@ -5,6 +5,8 @@
  */
 package aplication;
 
+import utilidades.Util;
+
 /**
  *
  * @author Aritz, Mikel y Daniel
@@ -29,6 +31,8 @@ public class Main {
             System.out.println("8- Consultar movimientos de una cuenta");
             System.out.println("9- SALIR");
             System.out.println("***********************************************");
+            System.out.println("Introduce una opción");
+            opc = Util.leerInt();
             
             
             switch(opc){
