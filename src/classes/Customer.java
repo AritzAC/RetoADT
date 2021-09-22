@@ -6,6 +6,7 @@
 package classes;
 
 import java.io.Serializable;
+import utilidades.Util;
 
 /**
  *
@@ -14,7 +15,7 @@ import java.io.Serializable;
 public class Customer implements Serializable{
     //ATRIBUTOS
     
-    private int customerID;
+    private long customerID;
     private String firstName;
     private String lastname;
     private String middleIntial;
@@ -35,14 +36,14 @@ public class Customer implements Serializable{
     /**
      * @return the customerID
      */
-    public int getCustomerID() {
+    public long getCustomerID() {
         return customerID;
     }
 
     /**
      * @param customerID the customerID to set
      */
-    public void setCustomerID(int customerID) {
+    public void setCustomerID(long customerID) {
         this.customerID = customerID;
     }
 
@@ -170,5 +171,19 @@ public class Customer implements Serializable{
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    //Metodos
+    public void setDatos(){
+        this.customerID = Util.leerInt("Introduce el ID: ");
+        this.firstName = Util.introducirCadena("Introduce el nombre: ");
+        this.lastname = Util.introducirCadena("Introduce el apellido: ");
+        this.middleIntial = Util.introducirCadena("Introduce la inicial del segundo nombre: ");
+        this.street = Util.introducirCadena("Introduce la calle: ");
+        this.city = Util.introducirCadena("Introduce la ciudad: ");
+        this.state = Util.introducirCadena("Introduce el estado: ");
+        this.zip = Util.leerInt("Introduce el código ZIP: ");
+        this.phone = Util.leerInt("Introduce el teléfono: ");
+        this.email = Util.introducirCadena("Introduce el email: ");
     }
 }

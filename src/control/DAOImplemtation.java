@@ -66,7 +66,7 @@ public class DAOImplemtation implements DAO{
         try {
 
             stmt = con.prepareStatement(INSERTclient);
-            stmt.setInt(0, c.getCustomerID());
+            //stmt.setLong(0, c.getCustomerID()); innecesario
             stmt.setString(1, c.getCity());
             stmt.setString(2, c.getEmail());
             stmt.setString(3, c.getFirstName());
@@ -118,7 +118,7 @@ public class DAOImplemtation implements DAO{
         
         try{
             stmt = con.prepareStatement(SELECTcuenta);
-            stmt.setInt(1,c.getCustomerID());
+            stmt.setLong(1,c.getCustomerID());
             
             rs = stmt.executeQuery();
             
