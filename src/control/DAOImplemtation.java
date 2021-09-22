@@ -18,13 +18,12 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author 2dam
+ * @author Aritz, Mikel y Daniel
  */
 public class DAOImplemtation implements DAO{
 
     private Connection con;
     private PreparedStatement stmt;
-    //private CallableStatment cSmt;
     private ResourceBundle configFile;
     private String driverDB;
     private String urlBD;

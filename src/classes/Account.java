@@ -7,15 +7,15 @@ package classes;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import static java.util.Collections.enumeration;
 
 /**
  *
- * @author 2dam
+ * @author Aritz, Mikel y Daniel
  */
 public class Account implements Serializable{
 
+    //ATRIBUTOS
+    
     private int accountId;
     private String description;
     private float balance;
@@ -24,6 +24,13 @@ public class Account implements Serializable{
     private Timestamp beginBalanceTimestamp;
     private int accountType ;
 
+    //CONSTRUCTORES
+    
+     public Account() {
+    }
+     
+    //SETTERS y GETTERS
+     
     public void setAccountType(int accountType) {
         this.accountType = accountType;
     }
@@ -103,18 +110,16 @@ public class Account implements Serializable{
     }
 
     /**
-     * @return the beginBalanceTimestmp
+     * @param beginBalanceTimestamp the beginBalanceTimestamp to set
      */
-   
-
-    public void setBeginBalanceTimestmp(Timestamp beginBalanceTimestamp) {
+    public void setBeginBalanceTimestamp(Timestamp beginBalanceTimestamp) {
         this.beginBalanceTimestamp = beginBalanceTimestamp;
     }
-
+    
+    /**
+     * @return the beginBalanceTimestmp
+     */
     public Timestamp getBeginBalanceTimestamp() {
         return beginBalanceTimestamp;
-    }
-
-    public Account() {
     }
 }

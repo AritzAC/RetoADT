@@ -10,17 +10,25 @@ import java.time.LocalDate;
 
 /**
  *
- * @author 2dam
+ * @author Aritz, Mikel y Daniel
  */
 public class Movement implements Serializable{
 
+    //ATRIBUTOS
+    
     private int movementId;
     private int accountId;
     private LocalDate timestamp;
     private float amount;
     private float balance;
     private String description;
+    
+    //CONSTRUCTORES
+    public Movement() {
+    }
 
+    //SETTERS y GETTERS
+    
     /**
      * @return the movementId
      */
@@ -103,8 +111,5 @@ public class Movement implements Serializable{
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Movement() {
     }
 }

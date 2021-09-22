@@ -9,13 +9,22 @@ import java.io.Serializable;
 
 /**
  *
- * @author 2dam
+ * @author Aritz, Mikel y Daniel
  */
 public class Customer_Account implements Serializable{
 
+    //ATRIBUTOS
+    
     private int customerId;
     private int accountId;
 
+    //CONSTRUCTORES
+    
+    public Customer_Account() {
+    }
+    
+    //SETTERS y GETTERS
+    
     /**
      * @return the customerId
      */
@@ -42,8 +51,5 @@ public class Customer_Account implements Serializable{
      */
     public void setAccountId(int accountId) {
         this.accountId = accountId;
-    }
-
-    public Customer_Account() {
     }
 }

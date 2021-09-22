@@ -9,10 +9,11 @@ import java.io.Serializable;
 
 /**
  *
- * @author 2dam
+ * @author Aritz, Mikel y Daniel
  */
 public class Customer implements Serializable{
-
+    //ATRIBUTOS
+    
     private int customerID;
     private String firstName;
     private String lastname;
@@ -23,7 +24,14 @@ public class Customer implements Serializable{
     private int zip;
     private int phone;
     private String email;
-
+    
+    //CONSTRUCTORES
+    
+    public Customer() {
+    }
+    
+    //SETTERS y GETTERS
+    
     /**
      * @return the customerID
      */
@@ -162,8 +170,5 @@ public class Customer implements Serializable{
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Customer() {
     }
 }

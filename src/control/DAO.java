@@ -9,7 +9,7 @@ import classes.Customer;
 
 /**
  *
- * @author 2dam
+ * @author Aritz, Mikel y Daniel
  */
 public interface DAO {
     
