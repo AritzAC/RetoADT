@@ -15,10 +15,11 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utilidades.Util;
 
 /**
  *
- * @author Aritz, Mikel y Daniel
+ * @author 2dam
  */
 public class DAOImplemtation implements DAO{
 
@@ -30,9 +31,11 @@ public class DAOImplemtation implements DAO{
     private String userDB;
     private String passDB;
 
-    private final String INSERTclient = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private final String INSERTcliente = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private final String SELECTcliente ="SELECT * FROM customer WHERE id = ?";
+    private final String SELECTcuenta ="SELECT account.* FROM account,customer_account WHERE customer_account.customers_id = ? AND account.id = customer_account.accounts_id";
     private final String INSERTcuenta = "INSERT INTO account (id,balance,beginBalance,beginBalanceTimestamp,creditLine,description,type) VALUES (?,?,?,?,?,?,?)";
-    private final String SELECTcuenta ="SELECT * FROM Customer WHERE id = ?";
+    private final String INSERTclientecuenta = "INSERT INTO customer account VALUES (? ,?)";
     
     public DAOImplemtation() {
         this.configFile = ResourceBundle.getBundle("control.config");
@@ -57,25 +60,26 @@ public class DAOImplemtation implements DAO{
         if (con != null) {
             con.close();
         }
-
     }
     
     @Override
     public void crearCliente(Customer c){
         this.connection();
+        
         try {
-
-            stmt = con.prepareStatement(INSERTclient);
-            //stmt.setLong(0, c.getCustomerID()); innecesario
-            stmt.setString(1, c.getCity());
-            stmt.setString(2, c.getEmail());
-            stmt.setString(3, c.getFirstName());
-            stmt.setString(4, c.getLastname());
-            stmt.setString(5, c.getMiddleIntial());
-            stmt.setInt(6, c.getPhone());
-            stmt.setString(7, c.getState());
-            stmt.setString(8, c.getStreet());
-            stmt.setInt(9, c.getZip());
+            
+            stmt = con.prepareStatement(INSERTcliente);
+            
+            stmt.setLong(1, c.getCustomerID());
+            stmt.setString(2, c.getCity());
+            stmt.setString(3, c.getEmail());
+            stmt.setString(4, c.getFirstName());
+            stmt.setString(5, c.getLastname());
+            stmt.setString(6, c.getMiddleIntial());
+            stmt.setLong(7, c.getPhone());
+            stmt.setString(8, c.getState());
+            stmt.setString(9, c.getStreet());
+            stmt.setInt(10, c.getZip());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,49 +91,26 @@ public class DAOImplemtation implements DAO{
             Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public void crearCuenta(Account a){
-        this.connection();
-        try {
-
-            stmt = con.prepareStatement(INSERTcuenta);
-            stmt.setInt(1, a.getAccountId());
-            stmt.setFloat(2, a.getBalance());
-            stmt.setFloat(3, a.getBeginBalance());
-            stmt.setTimestamp(4, a.getBeginBalanceTimestamp());
-            stmt.setFloat(5, a.getCreditLine());
-            stmt.setString(6, a.getDescription());
-            stmt.setInt(7, a.getAccountType());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            this.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public Customer consuCuenta(Customer c){
+    
+    public Customer consuCliente(Customer c) {
         ResultSet rs = null;
         
         this.connection();
         
         try{
-            stmt = con.prepareStatement(SELECTcuenta);
+            stmt = con.prepareStatement(SELECTcliente);
             stmt.setLong(1,c.getCustomerID());
             
             rs = stmt.executeQuery();
             
             while(rs.next()){
-                c.setCustomerID(rs.getInt(1));
+                //c.setCustomerID(rs.getInt(1));  Innecesario
                 c.setCity(rs.getString(2));
                 c.setEmail(rs.getString(3));
                 c.setFirstName(rs.getString(4));
                 c.setLastname(rs.getString(5));
                 c.setMiddleIntial(rs.getString(6));
-                c.setPhone(rs.getInt(7));
+                c.setPhone(rs.getLong(7));
                 c.setState(rs.getString(8));
                 c.setStreet(rs.getString(9));
                 c.setZip(rs.getInt(10));        
@@ -155,25 +136,67 @@ public class DAOImplemtation implements DAO{
         
         return c;
     }
-
+    
     @Override
-    public Customer consuCliente() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Account consuCuenta(Customer c){
+        ResultSet rs = null;
+        
+        this.connection();
+        
+        try {
+            stmt = con.prepareStatement(SELECTcuenta);
+            stmt.setLong(1,c.getCustomerID());
+            
+        } catch (Exception e) {
+        }
+        
+        return null;
     }
-
+    
     @Override
-    public void consuCuenta() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void crearCuenta(Account a){
+        this.connection();
+        try {
+
+            stmt = con.prepareStatement(INSERTcuenta);
+            stmt.setLong(1, a.getAccountId());
+            stmt.setFloat(2, a.getBalance());
+            stmt.setFloat(3, a.getBeginBalance());
+            stmt.setTimestamp(4, a.getBeginBalanceTimestamp());
+            stmt.setFloat(5, a.getCreditLine());
+            stmt.setString(6, a.getDescription());
+            stmt.setInt(7, a.getAccountType());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-
+    
     @Override
-    public void crearCuenta() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void addCliente(Customer c, Account a) {
+        this.connection();
+        
+        try {
+            
+            stmt = con.prepareStatement(INSERTclientecuenta);
+            stmt.setLong(1, c.getCustomerID());
+            stmt.setLong(2, a.getAccountId());
+            
 
-    @Override
-    public void addCliente() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -190,5 +213,4 @@ public class DAOImplemtation implements DAO{
     public void consuMovimi() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

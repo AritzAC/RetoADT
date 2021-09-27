@@ -16,13 +16,13 @@ public class Account implements Serializable{
 
     //ATRIBUTOS
     
-    private int accountId;
+    private long accountId;
     private String description;
     private float balance;
     private float creditLine;
     private float beginBalance;
     private Timestamp beginBalanceTimestamp;
-    private int accountType ;
+    private int accountType;
 
     //CONSTRUCTORES
     
@@ -42,7 +42,7 @@ public class Account implements Serializable{
     /**
      * @return the accountId
      */
-    public int getAccountId() {
+    public long getAccountId() {
         return accountId;
     }
 
