@@ -2,6 +2,7 @@ package aplication;
 
 import classes.Account;
 import classes.Customer;
+import classes.Movement;
 import control.DAO;
 import control.DAOImplementation;
 import utilidades.Util;
@@ -22,6 +23,7 @@ public class Main {
         DAO d = new DAOImplementation();
         Customer c = new Customer();
         Account a = new Account();
+        Movement m = new Movement();
         
         //Menu
         do{
@@ -45,25 +47,25 @@ public class Main {
                     crearCliente(d,c);
                     break;
                 case 2:
-                    consultarDatosCliente(d,a);
+                    consultarDatosCliente(d,c);
                     break;
                 case 3:
-                    ConsultarCuentasCliente();
+                    ConsultarCuentasCliente(d,c,a);
                     break;
                 case 4:
-                    crearCuentaCliente();
+                    crearCuentaCliente(d,a);
                     break;
                 case 5:
-                    agregarClienteCuenta();
+                    agregarClienteCuenta(d,c,a);
                     break;
                 case 6:
-                    consultarDatosCuenta();
+                    consultarDatosCuenta(d,a);
                     break;
                 case 7:
-                    realizarMovimientoCuenta();
+                    realizarMovimientoCuenta(d,m);
                     break;
                 case 8:
-                    consultarMovimientosCuenta();
+                    consultarMovimientosCuenta(d,m,a);
                     break;
                 case 9:
                     System.out.println("Has decidido salir del programa, ADIOS!");
@@ -95,51 +97,70 @@ public class Main {
      * @param d recibe los datos de la implementacion
      * @param a contiene los datos de la clase Account
      */
-    private static void consultarDatosCliente(DAO d, Account a) {
+    private static void consultarDatosCliente(DAO d, Customer c) {
+        long id = Util.leerLong("Introduce el id del cliente: ");
+        c.setCustomerID(id);
+        d.consuCliente(c);
+        System.out.println(c.toString());
+        
+    }
+
+    /*
+    CONSULTAR TODAS LAS CUENTAS DE UN CLIENTE
+    */
+    private static void ConsultarCuentasCliente(DAO d, Customer c, Account a) {
+        long id = Util.leerLong("Introduce el id del cliente: ");
+        c.setCustomerID(id);
+        d.consuCuenta(c, a);
+        System.out.println(a.toString());
+
+    }
+
+    /*
+    CREAR UNA CUENTA PARA UN CLIENTE
+    */
+    private static void crearCuentaCliente(DAO d, Account a) {
         a.setDatos();
         d.crearCuenta(a);
         System.out.println("Cuenta creada satisfactoriamente");
     }
 
     /*
-    CONSULTAR TODAS LAS CUENTAS DE UN CLIENTE
-    */
-    private static void ConsultarCuentasCliente() {
-        
-    }
-
-    /*
-    CREAR UNA CUENTA PARA UN CLIENTE
-    */
-    private static void crearCuentaCliente() {
-        
-    }
-
-    /*
     AGREGAR UN CLIENTE A UNA CUENTA
     */
-    private static void agregarClienteCuenta() {
-        
+    private static void agregarClienteCuenta(DAO d, Customer c, Account a) {
+        c.setCustomerID(Util.leerLong("Introduce id del cliente: "));
+        a.setAccountId(Util.leerLong("Introduce id de la cuenta: "));
+        d.addCliente(c, a);
+        System.out.println("cliente añadido satisfactoriamente a la cuenta");
     }
 
     /*
     CONSULTAR TODOS LOS DATOS DE UNA CUENTA
     */
-    private static void consultarDatosCuenta() {
+    private static void consultarDatosCuenta(DAO d, Account a) {
+        a.setAccountId(Util.leerLong("Introduce el id de la cuenta: "));
+        d.consuDatoC(a);
+        System.out.println(a.toString());
         
     }
 
     /*
     REALIZAR UN MOVIMIENTO SOBRE UNA CUENTA
     */
-    private static void realizarMovimientoCuenta() {
+    private static void realizarMovimientoCuenta(DAO d, Movement m) {
+        m.setDatos();
+        d.movimi(m);
+        System.out.println("Movimiento realizado satisfactoriamente");
         
     }
 
     /*
     CONSULTAR MOVIMIENTOS DE UNA CUENTA
     */
-    private static void consultarMovimientosCuenta() {
-        
+    private static void consultarMovimientosCuenta(DAO d, Movement m, Account a) {
+        a.setAccountId(Util.leerLong("Introduce el id de la cuenta: "));
+        d.consuMovimi(m, a);
+        System.out.println(m.toString());
     }
 }

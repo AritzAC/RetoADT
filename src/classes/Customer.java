@@ -146,7 +146,10 @@ public class Customer implements Serializable{
         return phone;
     }
 
-    public void setPhone(long phone) {    
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(long phone) {
         this.phone = phone;
     }
 
@@ -177,4 +180,11 @@ public class Customer implements Serializable{
         this.phone = Util.leerLong("Introduce el teléfono: ");
         this.email = Util.introducirCadena("Introduce el email: ");
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "customerID=" + customerID + ", firstName=" + firstName + ", lastname=" + lastname + ", middleIntial=" + middleIntial + ", street=" + street + ", city=" + city + ", state=" + state + ", zip=" + zip + ", phone=" + phone + ", email=" + email + '}';
+    }
+    
+    
 }

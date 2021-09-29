@@ -2,6 +2,7 @@ package control;
 
 import classes.Account;
 import classes.Customer;
+import classes.Movement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,11 +12,10 @@ import java.util.ResourceBundle;
 
 /**
  *
- * @author Aritz, Mikel y Daniel
+ * @author 2dam
  */
-public class DAOImplementation implements DAO{
+public class DAOImplementation implements DAO {
 
-    //Atributos para la conexion a la base de datos
     private Connection con;
     private PreparedStatement stmt;
     private ResourceBundle configFile;
@@ -24,12 +24,15 @@ public class DAOImplementation implements DAO{
     private String userDB;
     private String passDB;
 
-    //Sentencias SQL
-    private final String INSERTclient = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private final String INSERTcliente = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private final String SELECTcliente = "SELECT * FROM customer WHERE id = ?";
+    private final String SELECTcuentascliente = "SELECT account.* FROM account,customer_account WHERE customer.id = ? AND customer.id = customer_account.customers_id AND account.id = customer_account.accounts_id";
     private final String INSERTcuenta = "INSERT INTO account (id,balance,beginBalance,beginBalanceTimestamp,creditLine,description,type) VALUES (?,?,?,?,?,?,?)";
-    private final String SELECTcuenta ="SELECT * FROM Customer WHERE id = ?";
-    
-    //Conexion a base de datos
+    private final String INSERTclientecuenta = "INSERT INTO customer_account VALUES (?,?)";
+    private final String SELECTcuenta = "SELECT * FROM account WHERE id = ?";
+    private final String INSERTmovimiento = "INSERT INTO movement VALUES (?,?,?,?,?,?)";
+    private final String SELECTmovimiento = "SELECT movement.* FROM movement,account WHERE account.id = ? AND account.id = movement.account_id";
+
     public DAOImplementation() {
         this.configFile = ResourceBundle.getBundle("control.config");
         this.driverDB = configFile.getString("driver");
@@ -46,10 +49,6 @@ public class DAOImplementation implements DAO{
         }
     }
 
-    /**
-     * 
-     * @throws SQLException suelta una exception si ocurre un error al cerrar la base de datos
-     */
     private void close() throws SQLException {
         if (stmt != null) {
             stmt.close();
@@ -57,45 +56,121 @@ public class DAOImplementation implements DAO{
         if (con != null) {
             con.close();
         }
-
     }
-    /**
-     * 
-     * @param c recibe los datos de la clase customer
-     */
+
     @Override
-    public void crearCliente(Customer c){
+    public void crearCliente(Customer c) {
         this.connection();
+
         try {
 
-            stmt = con.prepareStatement(INSERTclient);
-            stmt.setLong(1,c.getCustomerID());
-            stmt.setString(2,c.getCity());
-            stmt.setString(3,c.getEmail());
-            stmt.setString(4,c.getFirstName());
-            stmt.setString(5,c.getLastname());
-            stmt.setString(6,c.getMiddleIntial());
-            stmt.setLong(7,c.getPhone());
-            stmt.setString(8,c.getState());
-            stmt.setString(9,c.getStreet());
-            stmt.setInt(10,c.getZip());
+            stmt = con.prepareStatement(INSERTcliente);
+
+            stmt.setLong(1, c.getCustomerID());
+            stmt.setString(2, c.getCity());
+            stmt.setString(3, c.getEmail());
+            stmt.setString(4, c.getFirstName());
+            stmt.setString(5, c.getLastname());
+            stmt.setString(6, c.getMiddleIntial());
+            stmt.setLong(7, c.getPhone());
+            stmt.setString(8, c.getState());
+            stmt.setString(9, c.getStreet());
+            stmt.setInt(10, c.getZip());
             
             stmt.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error al crear cliente");
         }
-        
+
         try {
             this.close();
         } catch (SQLException ex) {
-            System.out.println("Error al cerrar bd");
+            System.out.println("Error al cerrar la BD");
+
         }
     }
 
     @Override
-    public void crearCuenta(Account a){
+    public Customer consuCliente(Customer c) {
+        ResultSet rs = null;
+
+        this.connection();
+
+        try {
+            stmt = con.prepareStatement(SELECTcliente);
+            stmt.setLong(1, c.getCustomerID());
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                c.setCity(rs.getString(2));
+                c.setEmail(rs.getString(3));
+                c.setFirstName(rs.getString(4));
+                c.setLastname(rs.getString(5));
+                c.setMiddleIntial(rs.getString(6));
+                c.setPhone(rs.getLong(7));
+                c.setState(rs.getString(8));
+                c.setStreet(rs.getString(9));
+                c.setZip(rs.getInt(10));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            System.out.println("Error al cerrar la BD");
+        }
+
+        return c;
+    }
+
+    @Override
+    public Account consuCuenta(Customer c, Account a) {
+        ResultSet rs = null;
+
+        this.connection();
+
+        try {
+            stmt = con.prepareStatement(SELECTcuentascliente);
+            stmt.setLong(1, c.getCustomerID());
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                a.setAccountId(rs.getLong(1));
+                a.setBalance(rs.getDouble(2));
+                a.setBeginBalance(rs.getDouble(3));
+                a.setBeginBalanceTimestamp(rs.getTimestamp(4));
+                a.setCreditLine(rs.getDouble(5));
+                a.setDescription(rs.getString(6));
+                a.setAccountType(rs.getInt(7));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            System.out.println("Error al cerrar la BD");
+        }
+
+        return null;
+    }
+
+    @Override
+    public void crearCuenta(Account a) {
         this.connection();
         try {
 
@@ -109,7 +184,7 @@ public class DAOImplementation implements DAO{
             stmt.setInt(7, a.getAccountType());
             
             stmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -117,83 +192,140 @@ public class DAOImplementation implements DAO{
         try {
             this.close();
         } catch (SQLException ex) {
-            System.out.println("Error al cerrar bd");
+            System.out.println("Error al cerrar la BD");
         }
     }
 
-    public Customer consuCuenta(Customer c){
-        ResultSet rs = null;
-        
+    @Override
+    public void addCliente(Customer c, Account a) {
         this.connection();
-        
-        try{
-            stmt = con.prepareStatement(SELECTcuenta);
-            stmt.setLong(1,c.getCustomerID());
+
+        try {
+
+            stmt = con.prepareStatement(INSERTclientecuenta);
+            stmt.setLong(1, c.getCustomerID());
+            stmt.setLong(2, a.getAccountId());
             
-            rs = stmt.executeQuery();
-            
-            while(rs.next()){
-                c.setCustomerID(rs.getInt(1));
-                c.setCity(rs.getString(2));
-                c.setEmail(rs.getString(3));
-                c.setFirstName(rs.getString(4));
-                c.setLastname(rs.getString(5));
-                c.setMiddleIntial(rs.getString(6));
-                c.setPhone(rs.getInt(7));
-                c.setState(rs.getString(8));
-                c.setStreet(rs.getString(9));
-                c.setZip(rs.getInt(10));        
-            }
-            
-        }catch(SQLException e){
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        
-        if(rs != null){
-            try{
-                rs.close();
-            }catch(SQLException e){
-                e.printStackTrace();
-            }
-            
-        }
+
         try {
             this.close();
         } catch (SQLException ex) {
-            System.out.println("Error al cerrar bd");
+            System.out.println("Error al cerrar la BD");
         }
-        
-        return c;
     }
 
     @Override
-    public Customer consuCliente() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Account consuDatoC(Account a) {
+        ResultSet rs = null;
+
+        this.connection();
+
+        try {
+            stmt = con.prepareStatement(SELECTcuenta);
+            stmt.setLong(1, a.getAccountId());
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                a.setBalance(rs.getDouble(2));
+                a.setBeginBalance(rs.getDouble(3));
+                a.setBeginBalanceTimestamp(rs.getTimestamp(4));
+                a.setCreditLine(rs.getDouble(5));
+                a.setDescription(rs.getString(6));
+                a.setAccountType(rs.getInt(7));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            System.out.println("Error al cerrar la BD");
+        }
+
+        return a;
     }
 
     @Override
-    public void addCliente() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void movimi(Movement m) {
+        this.connection();
+
+        try {
+
+            stmt = con.prepareStatement(INSERTmovimiento);
+            stmt.setLong(1, m.getMovementId());
+            stmt.setDouble(2, m.getAmount());
+            stmt.setDouble(3, m.getBalance());
+            stmt.setString(4, m.getDescription());
+            stmt.setTimestamp(5, m.getTimestamp());
+            stmt.setLong(6, m.getAccountId());
+            
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            System.out.println("Error al cerrar la BD");
+        }
     }
 
     @Override
-    public void consuDatoC() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Movement consuMovimi(Movement m, Account a) {
+        ResultSet rs = null;
 
-    @Override
-    public void movimi() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        this.connection();
 
-    @Override
-    public void consuMovimi() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        try {
+            stmt = con.prepareStatement(SELECTmovimiento);
+            stmt.setLong(1, a.getAccountId());
 
-    @Override
-    public void consuCuenta() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+            rs = stmt.executeQuery();
 
+            while (rs.next()) {
+                m.setMovementId(rs.getLong(1));
+                m.setAmount(rs.getDouble(2));
+                m.setBalance(rs.getDouble(3));
+                m.setDescription(rs.getString(4));
+                m.setTimestamp(rs.getTimestamp(5));
+                m.setAccountId(rs.getLong(6));
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            System.out.println("Error al cerrar la BD");
+        }
+
+        return m;
+    }
 }

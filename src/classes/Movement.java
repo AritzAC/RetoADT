@@ -1,7 +1,8 @@
 package classes;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.sql.Timestamp;
+import utilidades.Util;
 
 /**
  *
@@ -11,11 +12,11 @@ public class Movement implements Serializable{
 
     //ATRIBUTOS
     
-    private int movementId;
-    private int accountId;
-    private LocalDate timestamp;
-    private float amount;
-    private float balance;
+    private long movementId;
+    private long accountId;
+    private Timestamp timestamp;
+    private double amount;
+    private double balance;
     private String description;
     
     //CONSTRUCTORES
@@ -27,70 +28,70 @@ public class Movement implements Serializable{
     /**
      * @return the movementId
      */
-    public int getMovementId() {
+    public long getMovementId() {
         return movementId;
     }
 
     /**
      * @param movementId the movementId to set
      */
-    public void setMovementId(int movementId) {
+    public void setMovementId(long movementId) {
         this.movementId = movementId;
     }
 
     /**
      * @return the accountId
      */
-    public int getAccountId() {
+    public long getAccountId() {
         return accountId;
     }
 
     /**
      * @param accountId the accountId to set
      */
-    public void setAccountId(int accountId) {
+    public void setAccountId(long accountId) {
         this.accountId = accountId;
     }
 
     /**
      * @return the timestamp
      */
-    public LocalDate getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
     /**
      * @param timestamp the timestamp to set
      */
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
     /**
      * @return the amount
      */
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
     /**
      * @param amount the amount to set
      */
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
     /**
      * @return the balance
      */
-    public float getBalance() {
+    public double getBalance() {
         return balance;
     }
 
     /**
      * @param balance the balance to set
      */
-    public void setBalance(float balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
@@ -106,5 +107,21 @@ public class Movement implements Serializable{
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public void setDatos(){
+        this.movementId = Util.leerLong("Introduce el id: "); //tiene que ser un auto incremento
+        this.accountId = Util.leerLong("Introduce el id de la cuenta: ");
+        this.amount = Util.leerDouble("Introduce la cantidad: ");
+        this.balance = Util.leerDouble("Introduce el balance: ");
+        this.description = Util.introducirCadena("Introduce una descripción: ");
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println("Movimiento realizado en "+timestamp);
+        
+    }
+
+    @Override
+    public String toString() {
+        return "Movement{" + "movementId=" + movementId + ", accountId=" + accountId + ", timestamp=" + timestamp + ", amount=" + amount + ", balance=" + balance + ", description=" + description + '}';
     }
 }

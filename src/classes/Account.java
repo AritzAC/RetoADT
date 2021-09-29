@@ -23,7 +23,7 @@ public class Account implements Serializable{
     private double creditLine;
     private double beginBalance;
     private Timestamp beginBalanceTimestamp;
-    private int accountType ;
+    private int accountType;
 
     //CONSTRUCTORES
     
@@ -135,4 +135,10 @@ public class Account implements Serializable{
         System.out.println("Registrado correctamente en "+beginBalanceTimestamp);
         
     }
+
+    @Override
+    public String toString() {
+        return "Account{" + "accountId=" + accountId + ", description=" + description + ", balance=" + balance + ", creditLine=" + creditLine + ", beginBalance=" + beginBalance + ", beginBalanceTimestamp=" + beginBalanceTimestamp + ", accountType=" + accountType + '}';
+    }
+    
 }
