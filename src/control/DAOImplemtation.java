@@ -7,6 +7,7 @@ package control;
 
 import classes.Account;
 import classes.Customer;
+import classes.Movement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -31,11 +32,14 @@ public class DAOImplemtation implements DAO{
     private String userDB;
     private String passDB;
 
-    private final String INSERTcliente = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private final String INSERTcliente = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) VALUES (?,?,?,?,?,?,?,?,?,?)";
     private final String SELECTcliente ="SELECT * FROM customer WHERE id = ?";
-    private final String SELECTcuenta ="SELECT account.* FROM account,customer_account WHERE customer_account.customers_id = ? AND account.id = customer_account.accounts_id";
+    private final String SELECTcuentascliente ="SELECT account.* FROM account,customer_account WHERE customer_account.customers_id = ? AND account.id = customer_account.accounts_id";
     private final String INSERTcuenta = "INSERT INTO account (id,balance,beginBalance,beginBalanceTimestamp,creditLine,description,type) VALUES (?,?,?,?,?,?,?)";
-    private final String INSERTclientecuenta = "INSERT INTO customer account VALUES (? ,?)";
+    private final String INSERTclientecuenta = "INSERT INTO customer_account VALUES (?,?)";
+    private final String SELECTcuenta = "SELECT * FROM account WHERE id = ?";
+    private final String INSERTmovimiento = "INSERT INTO movement VALUES (?,?,?,?,?,?)";
+    private final String SELECTmovimiento = "SELECT * FROM movement WHERE id = ?";
     
     public DAOImplemtation() {
         this.configFile = ResourceBundle.getBundle("control.config");
@@ -92,6 +96,7 @@ public class DAOImplemtation implements DAO{
         }
     }
     
+    @Override
     public Customer consuCliente(Customer c) {
         ResultSet rs = null;
         
@@ -104,7 +109,6 @@ public class DAOImplemtation implements DAO{
             rs = stmt.executeQuery();
             
             while(rs.next()){
-                //c.setCustomerID(rs.getInt(1));  Innecesario
                 c.setCity(rs.getString(2));
                 c.setEmail(rs.getString(3));
                 c.setFirstName(rs.getString(4));
@@ -115,7 +119,6 @@ public class DAOImplemtation implements DAO{
                 c.setStreet(rs.getString(9));
                 c.setZip(rs.getInt(10));        
             }
-            
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -126,8 +129,8 @@ public class DAOImplemtation implements DAO{
             }catch(SQLException e){
                 e.printStackTrace();
             }
-            
         }
+        
         try {
             this.close();
         } catch (SQLException ex) {
@@ -138,16 +141,34 @@ public class DAOImplemtation implements DAO{
     }
     
     @Override
-    public Account consuCuenta(Customer c){
+    public Account consuCuenta(Customer c, Account a){
         ResultSet rs = null;
         
         this.connection();
         
         try {
-            stmt = con.prepareStatement(SELECTcuenta);
+            stmt = con.prepareStatement(SELECTcuentascliente);
             stmt.setLong(1,c.getCustomerID());
             
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                a.setAccountId(rs.getLong(1));
+                a.setBalance(rs.getDouble(2));
+                a.setBeginBalance(rs.getDouble(3));
+                a.setBeginBalanceTimestamp(rs.getTimestamp(4));
+                a.setCreditLine(rs.getDouble(5));
+                a.setDescription(rs.getString(6));
+                a.setAccountType(rs.getInt(7));
+            }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return null;
@@ -160,12 +181,13 @@ public class DAOImplemtation implements DAO{
 
             stmt = con.prepareStatement(INSERTcuenta);
             stmt.setLong(1, a.getAccountId());
-            stmt.setFloat(2, a.getBalance());
-            stmt.setFloat(3, a.getBeginBalance());
+            stmt.setDouble(2, a.getBalance());
+            stmt.setDouble(3, a.getBeginBalance());
             stmt.setTimestamp(4, a.getBeginBalanceTimestamp());
-            stmt.setFloat(5, a.getCreditLine());
+            stmt.setDouble(5, a.getCreditLine());
             stmt.setString(6, a.getDescription());
             stmt.setInt(7, a.getAccountType());
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -200,17 +222,108 @@ public class DAOImplemtation implements DAO{
     }
 
     @Override
-    public void consuDatoC() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Account consuDatoC(Account a) {
+        ResultSet rs = null;
+        
+        this.connection();
+        
+        try{
+            stmt = con.prepareStatement(SELECTcuenta);
+            stmt.setLong(1,a.getAccountId());
+            
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                a.setBalance(rs.getDouble(2));
+                a.setBeginBalance(rs.getDouble(3));
+                a.setBeginBalanceTimestamp(rs.getTimestamp(4));
+                a.setCreditLine(rs.getDouble(5));
+                a.setDescription(rs.getString(6));
+                a.setAccountType(rs.getInt(7));
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        
+        if(rs != null){
+            try{
+                rs.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return a;
     }
 
     @Override
-    public void movimi() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void movimi(Movement m) {
+        this.connection();
+        
+        try {
+            
+            stmt = con.prepareStatement(INSERTmovimiento);
+            stmt.setLong(1, m.getMovementId());
+            stmt.setFloat(2, m.getAmount());
+            stmt.setFloat(3, m.getBalance());
+            stmt.setString(4, m.getDescription());
+            stmt.setTimestamp(5, m.getTimestamp());
+            stmt.setLong(5, m.getAccountId());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
-    public void consuMovimi() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Movement consuMovimi(Movement m) {
+     ResultSet rs = null;
+        
+        this.connection();
+        
+        try{
+            stmt = con.prepareStatement(SELECTmovimiento);
+            stmt.setLong(1,m.getMovementId());
+            
+            rs = stmt.executeQuery();
+            
+            while(rs.next()){
+                m.setAmount(rs.getFloat(2));
+                m.setBalance(rs.getFloat(3));
+                m.setDescription(rs.getString(4));
+                m.setTimestamp(rs.getTimestamp(5));
+                m.setAccountId(rs.getLong(5));
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        
+        if(rs != null){
+            try{
+                rs.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        
+        try {
+            this.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return m;
     }
 }

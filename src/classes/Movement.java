@@ -6,6 +6,7 @@
 package classes;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 /**
@@ -16,9 +17,9 @@ public class Movement implements Serializable{
 
     //ATRIBUTOS
     
-    private int movementId;
-    private int accountId;
-    private LocalDate timestamp;
+    private long movementId;
+    private long accountId;
+    private Timestamp timestamp;
     private float amount;
     private float balance;
     private String description;
@@ -32,42 +33,42 @@ public class Movement implements Serializable{
     /**
      * @return the movementId
      */
-    public int getMovementId() {
+    public long getMovementId() {
         return movementId;
     }
 
     /**
      * @param movementId the movementId to set
      */
-    public void setMovementId(int movementId) {
+    public void setMovementId(long movementId) {
         this.movementId = movementId;
     }
 
     /**
      * @return the accountId
      */
-    public int getAccountId() {
+    public long getAccountId() {
         return accountId;
     }
 
     /**
      * @param accountId the accountId to set
      */
-    public void setAccountId(int accountId) {
+    public void setAccountId(long accountId) {
         this.accountId = accountId;
     }
 
     /**
      * @return the timestamp
      */
-    public LocalDate getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
     /**
      * @param timestamp the timestamp to set
      */
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
