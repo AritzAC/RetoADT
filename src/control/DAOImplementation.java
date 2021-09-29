@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package control;
 
 import classes.Account;
@@ -13,15 +8,14 @@ import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Aritz, Mikel y Daniel
  */
-public class DAOImplemtation implements DAO{
+public class DAOImplementation implements DAO{
 
+    //Atributos para la conexion a la base de datos
     private Connection con;
     private PreparedStatement stmt;
     private ResourceBundle configFile;
@@ -30,11 +24,13 @@ public class DAOImplemtation implements DAO{
     private String userDB;
     private String passDB;
 
-    private final String INSERTclient = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    //Sentencias SQL
+    private final String INSERTclient = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) VALUES (?,?,?,?,?,?,?,?,?,?)";
     private final String INSERTcuenta = "INSERT INTO account (id,balance,beginBalance,beginBalanceTimestamp,creditLine,description,type) VALUES (?,?,?,?,?,?,?)";
     private final String SELECTcuenta ="SELECT * FROM Customer WHERE id = ?";
     
-    public DAOImplemtation() {
+    //Conexion a base de datos
+    public DAOImplementation() {
         this.configFile = ResourceBundle.getBundle("control.config");
         this.driverDB = configFile.getString("driver");
         this.urlBD = configFile.getString("con");
@@ -50,6 +46,10 @@ public class DAOImplemtation implements DAO{
         }
     }
 
+    /**
+     * 
+     * @throws SQLException suelta una exception si ocurre un error al cerrar la base de datos
+     */
     private void close() throws SQLException {
         if (stmt != null) {
             stmt.close();
@@ -59,47 +59,57 @@ public class DAOImplemtation implements DAO{
         }
 
     }
-    
+    /**
+     * 
+     * @param c recibe los datos de la clase customer
+     */
     @Override
     public void crearCliente(Customer c){
         this.connection();
         try {
 
             stmt = con.prepareStatement(INSERTclient);
-            //stmt.setLong(0, c.getCustomerID()); innecesario
-            stmt.setString(1, c.getCity());
-            stmt.setString(2, c.getEmail());
-            stmt.setString(3, c.getFirstName());
-            stmt.setString(4, c.getLastname());
-            stmt.setString(5, c.getMiddleIntial());
-            stmt.setInt(6, c.getPhone());
-            stmt.setString(7, c.getState());
-            stmt.setString(8, c.getStreet());
-            stmt.setInt(9, c.getZip());
+            stmt.setLong(1,c.getCustomerID());
+            stmt.setString(2,c.getCity());
+            stmt.setString(3,c.getEmail());
+            stmt.setString(4,c.getFirstName());
+            stmt.setString(5,c.getLastname());
+            stmt.setString(6,c.getMiddleIntial());
+            stmt.setLong(7,c.getPhone());
+            stmt.setString(8,c.getState());
+            stmt.setString(9,c.getStreet());
+            stmt.setInt(10,c.getZip());
+            
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Error al crear cliente");
         }
         
         try {
             this.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error al cerrar bd");
         }
     }
 
+    @Override
     public void crearCuenta(Account a){
         this.connection();
         try {
 
             stmt = con.prepareStatement(INSERTcuenta);
-            stmt.setInt(1, a.getAccountId());
-            stmt.setFloat(2, a.getBalance());
-            stmt.setFloat(3, a.getBeginBalance());
+            stmt.setLong(1, a.getAccountId());
+            stmt.setDouble(2, a.getBalance());
+            stmt.setDouble(3, a.getBeginBalance());
             stmt.setTimestamp(4, a.getBeginBalanceTimestamp());
-            stmt.setFloat(5, a.getCreditLine());
+            stmt.setDouble(5, a.getCreditLine());
             stmt.setString(6, a.getDescription());
             stmt.setInt(7, a.getAccountType());
+            
+            stmt.executeUpdate();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -107,7 +117,7 @@ public class DAOImplemtation implements DAO{
         try {
             this.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error al cerrar bd");
         }
     }
 
@@ -150,7 +160,7 @@ public class DAOImplemtation implements DAO{
         try {
             this.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DAOImplemtation.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error al cerrar bd");
         }
         
         return c;
@@ -158,16 +168,6 @@ public class DAOImplemtation implements DAO{
 
     @Override
     public Customer consuCliente() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void consuCuenta() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void crearCuenta() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -188,6 +188,11 @@ public class DAOImplemtation implements DAO{
 
     @Override
     public void consuMovimi() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void consuCuenta() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

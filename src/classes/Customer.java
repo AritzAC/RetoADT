@@ -23,7 +23,7 @@ public class Customer implements Serializable{
     private String city;
     private String state;
     private int zip;
-    private int phone;
+    private long phone;
     private String email;
     
     //CONSTRUCTORES
@@ -32,20 +32,6 @@ public class Customer implements Serializable{
     }
     
     //SETTERS y GETTERS
-    
-    /**
-     * @return the customerID
-     */
-    public long getCustomerID() {
-        return customerID;
-    }
-
-    /**
-     * @param customerID the customerID to set
-     */
-    public void setCustomerID(long customerID) {
-        this.customerID = customerID;
-    }
 
     /**
      * @return the firstName
@@ -145,17 +131,22 @@ public class Customer implements Serializable{
         this.zip = zip;
     }
 
+    public long getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(long customerID) {
+        this.customerID = customerID;
+    }
     /**
+     * 
      * @return the phone
      */
-    public int getPhone() {
+    public long getPhone() {
         return phone;
     }
 
-    /**
-     * @param phone the phone to set
-     */
-    public void setPhone(int phone) {
+    public void setPhone(long phone) {    
         this.phone = phone;
     }
 
@@ -175,7 +166,7 @@ public class Customer implements Serializable{
     
     //Metodos
     public void setDatos(){
-        this.customerID = Util.leerInt("Introduce el ID: ");
+        this.customerID = Util.leerLong("Introduce el ID: ");
         this.firstName = Util.introducirCadena("Introduce el nombre: ");
         this.lastname = Util.introducirCadena("Introduce el apellido: ");
         this.middleIntial = Util.introducirCadena("Introduce la inicial del segundo nombre: ");
@@ -183,7 +174,7 @@ public class Customer implements Serializable{
         this.city = Util.introducirCadena("Introduce la ciudad: ");
         this.state = Util.introducirCadena("Introduce el estado: ");
         this.zip = Util.leerInt("Introduce el código ZIP: ");
-        this.phone = Util.leerInt("Introduce el teléfono: ");
+        this.phone = Util.leerLong("Introduce el teléfono: ");
         this.email = Util.introducirCadena("Introduce el email: ");
     }
 }

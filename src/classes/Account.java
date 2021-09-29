@@ -7,6 +7,7 @@ package classes;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import utilidades.Util;
 
 /**
  *
@@ -16,11 +17,11 @@ public class Account implements Serializable{
 
     //ATRIBUTOS
     
-    private int accountId;
+    private long accountId;
     private String description;
-    private float balance;
-    private float creditLine;
-    private float beginBalance;
+    private double balance;
+    private double creditLine;
+    private double beginBalance;
     private Timestamp beginBalanceTimestamp;
     private int accountType ;
 
@@ -42,14 +43,14 @@ public class Account implements Serializable{
     /**
      * @return the accountId
      */
-    public int getAccountId() {
+    public long getAccountId() {
         return accountId;
     }
 
     /**
      * @param accountId the accountId to set
      */
-    public void setAccountId(int accountId) {
+    public void setAccountId(long accountId) {
         this.accountId = accountId;
     }
 
@@ -70,42 +71,42 @@ public class Account implements Serializable{
     /**
      * @return the balance
      */
-    public float getBalance() {
+    public double getBalance() {
         return balance;
     }
 
     /**
      * @param balance the balance to set
      */
-    public void setBalance(float balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
     /**
      * @return the creditLine
      */
-    public float getCreditLine() {
+    public double getCreditLine() {
         return creditLine;
     }
 
     /**
      * @param creditLine the creditLine to set
      */
-    public void setCreditLine(float creditLine) {
+    public void setCreditLine(double creditLine) {
         this.creditLine = creditLine;
     }
 
     /**
      * @return the beginBalance
      */
-    public float getBeginBalance() {
+    public double getBeginBalance() {
         return beginBalance;
     }
 
     /**
      * @param beginBalance the beginBalance to set
      */
-    public void setBeginBalance(float beginBalance) {
+    public void setBeginBalance(double beginBalance) {
         this.beginBalance = beginBalance;
     }
 
@@ -121,5 +122,17 @@ public class Account implements Serializable{
      */
     public Timestamp getBeginBalanceTimestamp() {
         return beginBalanceTimestamp;
+    }
+    
+    public void setDatos(){
+        this.accountId = Util.leerLong("Introduce un id: ");
+        this.accountType = Util.leerInt("Introduce el tipo de cuenta (0 ó 1): ");
+        this.beginBalance = Util.leerDouble("Introduce el balance inicial: ");
+        this.balance = Util.leerDouble("Introduce el balance: ");
+        this.creditLine = Util.leerDouble("Introduce la linea de credito: ");
+        this.description = Util.introducirCadena("Introduce una descripción: ");
+        this.beginBalanceTimestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println("Registrado correctamente en "+beginBalanceTimestamp);
+        
     }
 }

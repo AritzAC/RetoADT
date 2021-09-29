@@ -1,10 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package aplication;
 
+import classes.Account;
+import classes.Customer;
+import control.DAO;
+import control.DAOImplementation;
 import utilidades.Util;
 
 /**
@@ -17,8 +16,14 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //Declaraciones
         int opc = 0;
         
+        DAO d = new DAOImplementation();
+        Customer c = new Customer();
+        Account a = new Account();
+        
+        //Menu
         do{
             System.out.println("***********************************************");
             System.out.println("1- Crear Cliente");
@@ -37,10 +42,10 @@ public class Main {
             
             switch(opc){
                 case 1:
-                    crearCliente();
+                    crearCliente(d,c);
                     break;
                 case 2:
-                    consultarDatosCliente();
+                    consultarDatosCliente(d,a);
                     break;
                 case 3:
                     ConsultarCuentasCliente();
@@ -72,18 +77,28 @@ public class Main {
 
     //Metodos switch
     
-    /*
-    CREAR UN CLIENTE
-    */
-    private static void crearCliente() {
-        
+    /**
+     * CREAR UN CLIENTE
+     * 
+     * @param d recibe los datos de la implementacion
+     * @param c contiene los datos de la clase customer
+     */
+    private static void crearCliente(DAO d, Customer c) {
+        c.setDatos();
+        d.crearCliente(c);
+        System.out.println("Cliente creado satisfactoriamente");
     }
 
-    /*
-    CONSULTAR TODOS LOS DATOS DE UN CLIENTE
-    */
-    private static void consultarDatosCliente() {
-        
+    /**
+     * CONSULTAR TODOS LOS DATOS DE UN CLIENTE
+     * 
+     * @param d recibe los datos de la implementacion
+     * @param a contiene los datos de la clase Account
+     */
+    private static void consultarDatosCliente(DAO d, Account a) {
+        a.setDatos();
+        d.crearCuenta(a);
+        System.out.println("Cuenta creada satisfactoriamente");
     }
 
     /*
