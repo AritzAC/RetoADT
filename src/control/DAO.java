@@ -6,7 +6,7 @@ import classes.Movement;
 
 /**
  *
- * @author 2dam
+ * @author Aritz, Mikel y Daniel
  */
 public interface DAO {
     

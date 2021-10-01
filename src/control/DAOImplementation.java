@@ -12,10 +12,13 @@ import java.util.ResourceBundle;
 
 /**
  *
- * @author 2dam
+ * @author Aritz, Mikel y Daniel
  */
 public class DAOImplementation implements DAO {
 
+    /**
+     * Atributos para conexion a base de datos
+     */
     private Connection con;
     private PreparedStatement stmt;
     private ResourceBundle configFile;
@@ -24,6 +27,9 @@ public class DAOImplementation implements DAO {
     private String userDB;
     private String passDB;
 
+    /**
+     * Sentencias SQL
+     */
     private final String INSERTcliente = "INSERT INTO customer (id,city,email,firstName,lastName,middleInitial,phone,state,street,zip) VALUES (?,?,?,?,?,?,?,?,?,?)";
     private final String SELECTcliente = "SELECT * FROM customer WHERE id = ?";
     private final String SELECTcuentascliente = "SELECT account.* FROM account,customer_account WHERE customer.id = ? AND customer.id = customer_account.customers_id AND account.id = customer_account.accounts_id";
@@ -33,6 +39,9 @@ public class DAOImplementation implements DAO {
     private final String INSERTmovimiento = "INSERT INTO movement VALUES (?,?,?,?,?,?)";
     private final String SELECTmovimiento = "SELECT movement.* FROM movement,account WHERE account.id = ? AND account.id = movement.account_id";
 
+    /**
+     * Conexion a base de datos
+     */
     public DAOImplementation() {
         this.configFile = ResourceBundle.getBundle("control.config");
         this.driverDB = configFile.getString("driver");
@@ -58,6 +67,11 @@ public class DAOImplementation implements DAO {
         }
     }
 
+    /**
+     * Crea un cliente
+     * 
+     * @param c recibe los datos de la clase Customer
+     */
     @Override
     public void crearCliente(Customer c) {
         this.connection();
@@ -91,6 +105,12 @@ public class DAOImplementation implements DAO {
         }
     }
 
+    /**
+     * Consulta la informacion de un cliente
+     * 
+     * @param c recibe los datos de la clase Customer
+     * @return devuelve un Objeto Customer con los datos del mismo
+     */
     @Override
     public Customer consuCliente(Customer c) {
         ResultSet rs = null;
@@ -135,6 +155,13 @@ public class DAOImplementation implements DAO {
         return c;
     }
 
+    /**
+     * Consulta las cuentas de un cliente (faltan los arrays y controles)
+     * 
+     * @param c recibe los datos de la clase Customer
+     * @param a recibe los datos de la clase Account
+     * @return devuelve un Objeto Account con los datos del mismo
+     */
     @Override
     public Account consuCuenta(Customer c, Account a) {
         ResultSet rs = null;
@@ -169,6 +196,11 @@ public class DAOImplementation implements DAO {
         return null;
     }
 
+    /**
+     * Crear cuenta para un cliente (no se puede crear cuenta sin un cliente, faltante)
+     * 
+     * @param a recibe los datos de la clase Account
+     */
     @Override
     public void crearCuenta(Account a) {
         this.connection();
@@ -196,6 +228,12 @@ public class DAOImplementation implements DAO {
         }
     }
 
+    /**
+     * Agregar cliente a una cuenta
+     * 
+     * @param c recibe los datos de la clase Customer
+     * @param a recibe los datos de la clase Account
+     */
     @Override
     public void addCliente(Customer c, Account a) {
         this.connection();
@@ -219,6 +257,12 @@ public class DAOImplementation implements DAO {
         }
     }
 
+    /**
+     * Consultar los datos de una cuenta (con array, hay que cambiarlo)
+     * 
+     * @param a recibe los datos de la clase Account
+     * @return devuelbe un Objeto Account con los datos del mismo
+     */
     @Override
     public Account consuDatoC(Account a) {
         ResultSet rs = null;
@@ -260,6 +304,11 @@ public class DAOImplementation implements DAO {
         return a;
     }
 
+    /**
+     * Realizar movimiento de una cuenta
+     * 
+     * @param m recibe los datos de la clase Movement
+     */
     @Override
     public void movimi(Movement m) {
         this.connection();
@@ -287,6 +336,13 @@ public class DAOImplementation implements DAO {
         }
     }
 
+    /**
+     * Consultar movimientos de una cuenta (con array, hay que cambiarlo)
+     * 
+     * @param m recibe los datos de la clase Customer
+     * @param a recibe los datos de la clase Account
+     * @return devuelve un Objeto Movement con los datos del mismo
+     */
     @Override
     public Movement consuMovimi(Movement m, Account a) {
         ResultSet rs = null;

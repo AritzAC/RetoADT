@@ -14,6 +14,8 @@ import utilidades.Util;
 public class Main {
 
     /**
+     * Clase que se encarga de arrancar el programa
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -105,9 +107,13 @@ public class Main {
         
     }
 
-    /*
-    CONSULTAR TODAS LAS CUENTAS DE UN CLIENTE
-    */
+    /**
+     * CONSULTAR TODAS LAS CUENTAS DE UN CLIENTE
+     * 
+     * @param d recibe los datos de la implementacion
+     * @param c contiene los datos de la clase customer
+     * @param a contiene los datos de la clase Account
+     */
     private static void ConsultarCuentasCliente(DAO d, Customer c, Account a) {
         long id = Util.leerLong("Introduce el id del cliente: ");
         c.setCustomerID(id);
@@ -116,8 +122,11 @@ public class Main {
 
     }
 
-    /*
-    CREAR UNA CUENTA PARA UN CLIENTE
+    /**
+    * CREAR UNA CUENTA PARA UN CLIENTE
+    * 
+    * @param d recibe los datos de la implementacion
+    * @param a contiene los datos de la clase Account
     */
     private static void crearCuentaCliente(DAO d, Account a) {
         a.setDatos();
@@ -125,8 +134,12 @@ public class Main {
         System.out.println("Cuenta creada satisfactoriamente");
     }
 
-    /*
-    AGREGAR UN CLIENTE A UNA CUENTA
+    /**
+    * AGREGAR UN CLIENTE A UNA CUENTA
+    * 
+    * @param d recibe los datos de la implementacion
+    * @param c contiene los datos de la clase customer
+    * @param a contiene los datos de la clase Account
     */
     private static void agregarClienteCuenta(DAO d, Customer c, Account a) {
         c.setCustomerID(Util.leerLong("Introduce id del cliente: "));
@@ -135,8 +148,11 @@ public class Main {
         System.out.println("cliente añadido satisfactoriamente a la cuenta");
     }
 
-    /*
-    CONSULTAR TODOS LOS DATOS DE UNA CUENTA
+    /**
+    * CONSULTAR TODOS LOS DATOS DE UNA CUENTA
+    * 
+    * @param d recibe los datos de la implementacion
+    * @param a contiene los datos de la clase Account
     */
     private static void consultarDatosCuenta(DAO d, Account a) {
         a.setAccountId(Util.leerLong("Introduce el id de la cuenta: "));
@@ -145,8 +161,11 @@ public class Main {
         
     }
 
-    /*
-    REALIZAR UN MOVIMIENTO SOBRE UNA CUENTA
+    /**
+    * REALIZAR UN MOVIMIENTO SOBRE UNA CUENTA
+    * 
+    * @param d recibe los datos de la implementacion
+    * @param m contiene los datos de la clase Movement
     */
     private static void realizarMovimientoCuenta(DAO d, Movement m) {
         m.setDatos();
@@ -155,8 +174,12 @@ public class Main {
         
     }
 
-    /*
-    CONSULTAR MOVIMIENTOS DE UNA CUENTA
+    /**
+    * CONSULTAR MOVIMIENTOS DE UNA CUENTA
+    * 
+    * @param d recibe los datos de la implementacion
+    * @param m contiene los datos de la clase Movement
+    * @param a contiene los datos de la clase Account
     */
     private static void consultarMovimientosCuenta(DAO d, Movement m, Account a) {
         a.setAccountId(Util.leerLong("Introduce el id de la cuenta: "));
